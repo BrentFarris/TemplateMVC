@@ -1,47 +1,91 @@
 <?php
 
 class Database {
-	/** @var String */
+
+	/**
+	 * The host address for this MySQL database
+	 * @var String
+	 */
 	private $host;
-	/** @var String */
+
+	/**
+	 * The username for this MySQL database
+	 * @var String
+	 */
 	private $username;
-	/** @var String */
+
+	/**
+	 * The password for this MySQL database
+	 * @var String
+	 */
 	private $password;
-	/** @var String */
+
+	/**
+	 * The database name for this MySQL database
+	 * @var String
+	 */
 	private $database;
-	/** @var PDO */
+
+	/**
+	 * The MySQL PDO object for this MySQL database
+	 * @var PDO
+	 */
 	private $handle = null;
-	/** @var Bool */
+
+	/**
+	 * If we are currently connected to this database
+	 * @var Bool
+	 */
 	private $connected;
-	/** @var Bool */
+
+	/**
+	 * If we are currently in an instance transaction for this database on this user
+	 * @var Bool
+	 */
 	private $inTransaction;
-	/** @var array Array */
+
+	/**
+	 * A list of current database connections
+	 * @var Array
+	 */
 	private static $connections = array();
 
 	/**
 	 * Get the current cached Database object for the specified database name or make a new connection
 	 * using the settings ini then cache it for later use
-	 * @param String $dbName The name of the attribute in the settings ini (database name) to pull information from
+	 * @param String $section The name of the attribute in the settings ini (database name) to pull information from
 	 * @param Bool $connectNow Execute the connection on construction or wait for manual connection
 	 * @return Database|null The database that was either cached or just created
 	 */
 	public static function MakeConnection($section, $connectNow=true) {
+		/** @var Database $db */
 		$db = null;
+
+		// If we have not created a connection to this particular database yet then we will create one now
+		// and cache it
 		if (!array_key_exists($section, self::$connections)) {
+			// Get all of the connection settings from the default ini file
 			$host = Settings::GetSetting($section, 'host');
 			$username = Settings::GetSetting($section, 'username');
 			$password = Settings::GetSetting($section, 'password');
 			$database = Settings::GetSetting($section, 'database');
-			
-			$db = new Database($host, $username, $password, $database, true);
+
+			// Create the new connection
+			$db = new Database($host, $username, $password, $database, $connectNow);
+
+			// Cache the newly created connection
 			self::$connections[$section] = $db;
-			return $db;
-		} else
+		} else {
+			// Use the cached database object for this request
 			$db = self::$connections[$section];
-		
-		if ($connectNow)
-			$db->Connect();
-		
+
+			// Connect now that the database object has been created if we passed true for connect now
+			if ($connectNow) {
+				$db->Connect();
+			}
+		}
+
+		// Return the newly created connection for further use
 		return $db;
 	}
 
@@ -62,22 +106,28 @@ class Database {
 			$this->database = $user;
 		else
 			$this->database = $dbName;
-		
-		if ($connectNow)
+
+		// Make a connection now that everything has been setup
+		if ($connectNow) {
 			$this->Connect();
+		}
 	}
 
 	/**
 	 * Make a connection to the database
 	 */
 	public function Connect() {
-		if ($this->connected)
+		// If we are already connected then there is no need to connect again
+		if ($this->connected) {
 			return;
-		
+		}
+
+		// Setup the PDO
 		$this->handle = new PDO('mysql:host='.$this->host.';dbname='.$this->database.';charset=utf8', $this->username, $this->password);
 		$this->handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->handle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-		
+
+		// Set connected to true as we have the PDO setup
 		$this->connected = true;
 	}
 
@@ -108,8 +158,9 @@ class Database {
 	 * Commits and closes the pending transaction
 	 */
 	public function Commit() {
-		if ($this->inTransaction)
+		if ($this->inTransaction) {
 			$this->handle->commit();
+		}
 		
 		$this->inTransaction = false;
 	}
@@ -137,20 +188,21 @@ class Database {
 	 * @return Array|Mixed The rows that were found that met the criteria
 	 */
 	public function GetArray($query, $values=array(), $one=false, $numberedIndexes=false) {
-		$arr = array();
 		$this->Connect();
-		
-		if ($one)
+
+		// Get only 1 item from the query
+		if ($one) {
 			$query .= " LIMIT 1";
+		}
 		
 		$obj = $this->handle->prepare($query);
 		$obj->execute($values);
-		//$this->handle->rowCount();
 		
-		if ($one)
+		if ($one) {
 			return $obj->fetch($numberedIndexes ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
-		else
+		} else {
 			return $obj->fetchall($numberedIndexes ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
+		}
 	}
 
 	/**
@@ -174,5 +226,6 @@ class Database {
 	 */
 	function Disconnect() {
 		$this->handle = null;
+		$this->connected = false;
 	}
 }

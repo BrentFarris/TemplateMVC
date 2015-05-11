@@ -1,5 +1,7 @@
 <?php
 
+// TODO:  Comment this beast
+
 if (count($argv) < 2 || empty($argv[1]))
 	die("Database name required for generation.\n");
 
