@@ -95,9 +95,5 @@ function MakeModule($name) {
 }
 
 $sectionName = $argv[1];
-//$analyticsName = 'Analytics';
-
 Tables($sectionName);
-//Tables($analyticsName);
-
 MakeModule($sectionName);
