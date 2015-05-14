@@ -123,7 +123,7 @@ class Database {
 		}
 
 		// Setup the PDO
-		$this->handle = new PDO('mysql:host='.$this->host.';dbname='.$this->database.';charset=utf8', $this->username, $this->password);
+		$this->handle = new PDO('mysql:host=' . $this->host . ';dbname=' . $this->database . ';charset=utf8', $this->username, $this->password);
 		$this->handle->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		$this->handle->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 

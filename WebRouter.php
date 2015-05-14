@@ -76,19 +76,19 @@ class WebRouter {
 		require_once($this->GetParsedPath());
 
 		// Create a string name for the class to be created
-		$controller = "\\Controller\\".$this->controllerName;
+		$controller = "\\Controller\\" . $this->controllerName;
 
 		// Dynamically create the class from the string name
 		$handle = new $controller;
 
 		// Include the website headers
-		include_once(__DIR__.'/Templates/head.html');
+		include_once(__DIR__ . '/Templates/head.html');
 
 		// Render the title from the requested controller class
 		call_user_func_array(array($handle, 'Title'), array());
 
 		// Close the website title tag
-		include_once(__DIR__.'/Templates/endTitle.html');
+		include_once(__DIR__ . '/Templates/endTitle.html');
 
 		// Load in the javascript files  to the header for the requested controller class
 		call_user_func_array(array($handle, 'JS'), array());
@@ -97,13 +97,13 @@ class WebRouter {
 		call_user_func_array(array($handle, 'CSS'), array());
 
 		// Setup the default body for the website
-		include_once(__DIR__.'/Templates/body.html');
+		include_once(__DIR__ . '/Templates/body.html');
 
 		// Render the main body of the website from the requested controller class
 		call_user_func_array(array($handle, 'Render'), array());
 
 		// Begin the footers for the website
-		include_once(__DIR__.'/Templates/footer.html');
+		include_once(__DIR__ . '/Templates/footer.html');
 
 		// Show any view specific footer information from the requested controller class
 		call_user_func_array(array($handle, 'Footer'), array());
@@ -112,6 +112,6 @@ class WebRouter {
 		call_user_func_array(array($handle, 'EndJS'), array());
 
 		// Close off all of the html view and end the render
-		include_once(__DIR__.'/Templates/end.html');
+		include_once(__DIR__ . '/Templates/end.html');
 	}
 }

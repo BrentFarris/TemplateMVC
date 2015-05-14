@@ -125,7 +125,7 @@ class DBObject {
 			if (!empty($keys))
 				$keys .= ' AND ';
 
-			$keys .= '`'.$key.'`=?';
+			$keys .= '`' . $key . '`=?';
 
 			// If any keys are changing, then use the previous key value and not the current value
 			if (array_key_exists($key, $changedKeys)) {

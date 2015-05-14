@@ -14,7 +14,7 @@ function Tables($name) {
 	$dbo = Database::MakeConnection($name);
 	$schema = Database::MakeConnection('information_schema', 'information_schema');
 	
-	$template = '<?php namespace '.$name.'; class __CLASS_NAME__ extends \DBObject { __CLASS_FIELDS__ function __construct($where="", Array $values = array()) { parent::__construct($this, $where, $values, \''.$name.'\'); __ASSIGN_KEYS__ } __JSONIFY__ ';
+	$template = '<?php namespace ' . $name . '; class __CLASS_NAME__ extends \DBObject { __CLASS_FIELDS__ function __construct($where="", Array $values = array()) { parent::__construct($this, $where, $values, \'' . $name . '\'); __ASSIGN_KEYS__ } __JSONIFY__ ';
 
 	$nameIndex = strpos($template, '__CLASS_NAME__');
 	$template = str_replace('__CLASS_NAME__', '', $template);
@@ -33,7 +33,7 @@ function Tables($name) {
 	}
 	
 	foreach ($tables as $table) {
-		$keyFields = $dbo->GetArray('SHOW INDEX FROM '.$table[0]);
+		$keyFields = $dbo->GetArray('SHOW INDEX FROM ' . $table[0]);
 		$keys = array();
 		foreach ($keyFields as $keyField) {
 			if ($keyField['Key_name'] == 'PRIMARY') {
@@ -41,9 +41,9 @@ function Tables($name) {
 			}
 		}
 		
-		$keysSetup = '$this->keys = array(\''.implode("','", $keys).'\');';
+		$keysSetup = '$this->keys = array(\'' . implode("','", $keys) . '\');';
 		
-		$fields = $dbo->GetArray('DESCRIBE '.$table[0]);
+		$fields = $dbo->GetArray('DESCRIBE ' . $table[0]);
 		$classFields = '';
 		$jsonify = 'public function ToArray($sans = array(), $compress = false) { $tmp = array(';
 		foreach ($fields as $field) {
@@ -52,8 +52,8 @@ function Tables($name) {
 			if (!empty($classFields))
 				$jsonify .= ',';
 			
-			$classFields .= 'protected $'.$fieldName.'; function Get'.(str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)))).'() { return $this->'.$fieldName.'; } function Set'.(str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)))).'($val) { $this->'.$fieldName.' = $val; } ';
-			$jsonify .= "'".$fieldName."' => \$this->".$fieldName;
+			$classFields .= 'protected $'  .$fieldName . '; function Get' . (str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)))) . '() { return $this->' . $fieldName . '; } function Set' . (str_replace(' ', '', ucwords(str_replace('_', ' ', $fieldName)))) . '($val) { $this->' . $fieldName . ' = $val; } ';
+			$jsonify .= "'" . $fieldName . "' => \$this->" . $fieldName;
 		}
 		$jsonify .= '); foreach($sans as $remove) { unset($tmp[$remove]); } if ($compress) { foreach (array_keys($tmp) as $key) { if ($tmp[$key] == null) { unset($tmp[$key]); } } } return $tmp; }';
 		
@@ -62,14 +62,14 @@ function Tables($name) {
 		$php = substr_replace($php, $classFields, $fieldsIndex, 0);
 		$php = substr_replace($php, $table, $nameIndex, 0);
 
-		$fileName = $name.'/'.$table[0].'.php';
+		$fileName = $name . '/' . $table[0] . '.php';
 		if (file_exists($fileName)) {
 			$current  = file_get_contents($fileName);
 			$lines	= explode("\n", $current);
 			$lines[0] = $php;
 			$current  = implode("\n", $lines);
 		} else {
-			$current = $php."\n\n\n".'}';
+			$current = $php . "\n\n\n" . '}';
 		}
 
 		file_put_contents($fileName, $current);
@@ -80,7 +80,7 @@ function MakeModule($name) {
 	if (!file_exists($name))
 		return;
 	
-	$module = '<?php require_once(__DIR__.\'/../Database.php\'); require_once(__DIR__.\'/../DBObject.php\'); ';
+	$module = '<?php require_once(__DIR__ . \'/../Database.php\'); require_once(__DIR__ . \'/../DBObject.php\'); ';
 	
 	$files = glob($name.'/*.{php}', GLOB_BRACE);
 	foreach($files as $file) {
@@ -88,7 +88,7 @@ function MakeModule($name) {
 			continue;
 		
 		$file = str_replace($name.'/', '', $file);
-		$module .= "require_once(__DIR__.'/{$file}'); ";
+		$module .= "require_once(__DIR__ . '/{$file}'); ";
 	}
 	
 	file_put_contents($name.'/DatabaseModule.php', $module);
