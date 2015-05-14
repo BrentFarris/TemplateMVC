@@ -1,6 +1,6 @@
 <?php
 
-namespace View;
+namespace Controller;
 
 /**
  * The terms page for the website, you can render this page by going
@@ -8,7 +8,7 @@ namespace View;
  * Class Terms
  * @package View
  */
-class Terms extends View implements IView {
+class Terms extends Controller implements IController {
 	public function __construct($dir = __DIR__) {
 		parent::__construct($dir);
 	}

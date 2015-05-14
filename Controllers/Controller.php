@@ -1,13 +1,13 @@
 <?php
 
 //
-namespace View;
+namespace Controller;
 
 /**
  * Class View
  * @package View
  */
-class View {
+class Controller {
 
 	/** @var String */
 	private $calledClassDir = '';
@@ -42,7 +42,7 @@ class View {
 	 */
 	protected function RenderHTML($file, $pageVars) {
 		// Get the contents of the specified html file
-		$body = file_get_contents($this->calledClassDir . '/html/' . $file . '.html');
+		$body = file_get_contents($this->calledClassDir . '/view/' . $file . '.html');
 
 		// Go through and inject any of the supplied variables into the body string
 		foreach ($pageVars as $key => $value) {

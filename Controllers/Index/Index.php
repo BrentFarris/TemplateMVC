@@ -1,6 +1,6 @@
 <?php
 
-namespace View;
+namespace Controller;
 
 /**
  * The index page of the website, if no page is specified in the parameters
@@ -8,7 +8,7 @@ namespace View;
  * Class Index
  * @package View
  */
-class Index extends View implements IView {
+class Index extends Controller implements IController {
 	public function __construct($dir = __DIR__) {
 		parent::__construct($dir);
 	}

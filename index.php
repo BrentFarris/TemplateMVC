@@ -62,8 +62,8 @@ function EchoException($exception) {
 }
 
 // Load in all the default routing and views
-require_once('Views/IView.php');
-require_once('Views/View.php');
+require_once('Controllers/IController.php');
+require_once('Controllers/Controller.php');
 require_once('Website.php');
 require_once('WebRouter.php');
 

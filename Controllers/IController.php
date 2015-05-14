@@ -1,13 +1,13 @@
 <?php
 
-namespace View;
+namespace Controller;
 
 /**
  * The default interface for all views
  * Interface IView
  * @package View
  */
-interface IView {
+interface IController {
 
 	// Get a list of javascript variables
 	function GetJSVars();
