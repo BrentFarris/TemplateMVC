@@ -23,12 +23,8 @@ define('URL', 'http://' . DOMAIN);
 
 // Allow the pulling of any file that is in the public folder
 if (strpos($_SERVER['REQUEST_URI'], '/public') === 0 || $_SERVER['REQUEST_URI'] === '/favicon.ico') {
-	if (LOCAL) {
-		// Remove the leading '/' character to make the path relative
-		require_once(ltrim($_SERVER['REQUEST_URI'], '/'));
-	} else {
-		require_once($_SERVER['REQUEST_URI']);
-	}
+	// Remove the leading '/' character to make the path relative
+	require_once(ltrim($_SERVER['REQUEST_URI'], '/'));
 	
 	// We do not need to do any routing since we delivered the file
 	exit;
