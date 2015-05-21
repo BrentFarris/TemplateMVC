@@ -10,7 +10,7 @@ class WebRouter {
 		// Check to see if an actual page (other than home) was requested
 		if (trim($this->GetRequestPathString()) != '/') {
 			/*  Separate the path by '/' for routing
-				so /about/sparta would be come ['about', 'sparta'] array
+				so /about/sparta would become ['about', 'sparta'] array
 			*/
 			$this->requestPath = array_slice(explode('/', $this->GetRequestPathString()), 1);
 		}
