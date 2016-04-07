@@ -1,6 +1,5 @@
 <?php
 
-//
 namespace Controller;
 
 /**
@@ -9,18 +8,18 @@ namespace Controller;
  */
 class Controller {
 
-	/** @var String */
+	/** @var string */
 	private $calledClassDir = '';
 
 	/**
 	 * Used to get just the name of the called class without the namespace
-	 * @var String
+	 * @var string
 	 */
 	protected $calledClass = '';
 
 	/**
 	 * A list of javascript variables and their values
-	 * @var Array
+	 * @var array
 	 */
 	private $jsVars = array();
 
@@ -37,8 +36,8 @@ class Controller {
 
 	/**
 	 * Render a relative html page and use the supplied vars to inject data
-	 * @param String $file The file to be loaded (Without the .html extension)
-	 * @param Array $pageVars The list of variables that can be used on the page
+	 * @param string $file The file to be loaded (Without the .html extension)
+	 * @param array $pageVars The list of variables that can be used on the page
 	 */
 	protected function RenderHTML($file, $pageVars) {
 		// Get the contents of the specified html file
@@ -70,17 +69,17 @@ class Controller {
 	 * Create a include statement for the specified javascript file which is
 	 * not passed with the trailing ".js" extension.  These files are stored
 	 * in public/CLASS_NAME/js/FILE_NAME.js
-	 * @param String $file The javascript FILE_NAME to be loaded
+	 * @param string $file The javascript FILE_NAME to be loaded
 	 */
 	protected function IncludeJS($file) {
-		echo '<script src="' . URL . '/public/' . $this->calledClass . '/js/' . $file . '.js"></script>';
+		echo '<script src="/public/' . $this->calledClass . '/js/' . $file . '.js"></script>';
 	}
 
 	/**
 	 * Create a include statement for the specified css file which is
 	 * not passed with the trailing ".css" extension.  These files are stored
 	 * in public/CLASS_NAME/css/FILE_NAME.css
-	 * @param String $file The javascript FILE_NAME to be loaded
+	 * @param string $file The javascript FILE_NAME to be loaded
 	 */
 	protected function IncludeCSS($file) {
 		if (LOCAL) {
@@ -88,14 +87,14 @@ class Controller {
 			include_once($this->calledClassDir . '/../../public/' . $this->calledClass . '/css/' . $file . '.css');
 			echo '--></style>';
 		} else {
-			echo '<link rel="stylesheet" type="text/css" href="' . URL . '/public/' . $this->calledClass . '/css/' . $file . '.css" />';
+			echo '<link rel="stylesheet" type="text/css" href="/public/' . $this->calledClass . '/css/' . $file . '.css" />';
 		}
 	}
 
 	/**
 	 * Used to create javascript variables with a specified name and value on the page
-	 * @param String $name The name that the javascript variable will have
-	 * @param Mixed $value The value that the javascript variable will have
+	 * @param string $name The name that the javascript variable will have
+	 * @param mixed $value The value that the javascript variable will have
 	 */
 	protected function MapVarJS($name, $value) {
 		// Check to see if the variable is a string variable to map it with quotes.
@@ -114,8 +113,8 @@ class Controller {
 
 	/**
 	 * Used to map a given array to javascript
-	 * @param String $name The name that the javascript variable will have
-	 * @param Array $values The array of values to be mapped to the given key name
+	 * @param string $name The name that the javascript variable will have
+	 * @param array $values The array of values to be mapped to the given key name
 	 */
 	protected function MapArrayJS($name, $values) {
 		// Setup the basic start of an array variable in JavaScript
@@ -130,7 +129,7 @@ class Controller {
 			}
 		}
 
-		// End the Javascript Array
+		// End the Javascript array
 		$result .= '];';
 
 		// Add the javascript to be injected into the page
@@ -139,7 +138,7 @@ class Controller {
 
 	/**
 	 * Get a list of the javascript variables to be dynamically created
-	 * @return Array
+	 * @return array
 	 */
 	public function GetJSVars() {
 		return $this->jsVars;

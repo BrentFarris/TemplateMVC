@@ -1,10 +1,11 @@
 <?php
 
 class WebRouter {
-	/** @var Array */
-	private $requestPath = array();	// The URL that was requested
-	/** @var String */
-	private $controllerName;				// The version of the API to use
+	/** @var array */
+	private $requestPath = array();     // The URL that was requested
+
+	/** @var string */
+	private $controllerName;	    	// The version of the API to use
 
 	public function __construct() {
 		// Check to see if an actual page (other than home) was requested
@@ -17,7 +18,7 @@ class WebRouter {
 	}
 
 	/**
-	 * @return Array
+	 * @return array
 	 */
 	public function GetRequestPath() {
 		return $this->requestPath;
@@ -31,15 +32,15 @@ class WebRouter {
 	}
 
 	/**
-	 * @return String
+	 * @return string
 	 */
 	public function GetParsedPath() {
-		return dirname(__FILE__) . '/Controllers/' . $this->controllerName . '/' . $this->controllerName . '.php';
+		return dirname(__FILE__) . '/Controller/' . $this->controllerName . '/' . $this->controllerName . '.php';
 	}
 
 	/**
 	 * Get the requested URI string
-	 * @return String
+	 * @return string
 	 */
 	public function GetRequestPathString() {
 		return $_SERVER['REQUEST_URI'];

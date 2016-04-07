@@ -4,25 +4,25 @@ class Database {
 
 	/**
 	 * The host address for this MySQL database
-	 * @var String
+	 * @var string
 	 */
 	private $host;
 
 	/**
 	 * The username for this MySQL database
-	 * @var String
+	 * @var string
 	 */
 	private $username;
 
 	/**
 	 * The password for this MySQL database
-	 * @var String
+	 * @var string
 	 */
 	private $password;
 
 	/**
 	 * The database name for this MySQL database
-	 * @var String
+	 * @var string
 	 */
 	private $database;
 
@@ -34,27 +34,27 @@ class Database {
 
 	/**
 	 * If we are currently connected to this database
-	 * @var Bool
+	 * @var bool
 	 */
 	private $connected;
 
 	/**
 	 * If we are currently in an instance transaction for this database on this user
-	 * @var Bool
+	 * @var bool
 	 */
 	private $inTransaction;
 
 	/**
 	 * A list of current database connections
-	 * @var Array
+	 * @var array
 	 */
 	private static $connections = array();
 
 	/**
 	 * Get the current cached Database object for the specified database name or make a new connection
 	 * using the settings ini then cache it for later use
-	 * @param String $section The name of the attribute in the settings ini (database name) to pull information from
-	 * @param Bool $connectNow Execute the connection on construction or wait for manual connection
+	 * @param string $section The name of the attribute in the settings ini (database name) to pull information from
+	 * @param bool $connectNow Execute the connection on construction or wait for manual connection
 	 * @return Database|null The database that was either cached or just created
 	 */
 	public static function MakeConnection($section, $connectNow=true) {
@@ -65,10 +65,10 @@ class Database {
 		// and cache it
 		if (!array_key_exists($section, self::$connections)) {
 			// Get all of the connection settings from the default ini file
-			$host = Settings::GetSetting($section, 'host');
-			$username = Settings::GetSetting($section, 'username');
-			$password = Settings::GetSetting($section, 'password');
-			$database = Settings::GetSetting($section, 'database');
+			$host = \Common\Settings\Settings::GetSetting($section, 'host');
+			$username = \Common\Settings\Settings::GetSetting($section, 'username');
+			$password = \Common\Settings\Settings::GetSetting($section, 'password');
+			$database = \Common\Settings\Settings::GetSetting($section, 'database');
 
 			// Create the new connection
 			$db = new Database($host, $username, $password, $database, $connectNow);
@@ -91,17 +91,17 @@ class Database {
 
 	/**
 	 * Creates an instance of the Database class that is used to connect to a MySQL database using login credentials
-	 * @param String $host The host address for the database
-	 * @param String $user The username to be used to log into the database
-	 * @param String $pass The password to be used to log into the database
-	 * @param String $dbName The database name to connect to once a connection is established
-	 * @param Bool $connectNow Execute the connection on construction or wait for manual connection
+	 * @param string $host The host address for the database
+	 * @param string $user The username to be used to log into the database
+	 * @param string $pass The password to be used to log into the database
+	 * @param string $dbName The database name to connect to once a connection is established
+	 * @param bool $connectNow Execute the connection on construction or wait for manual connection
 	 */
 	private function __construct($host, $user, $pass, $dbName="", $connectNow=false) {
 		$this->host = $host;
 		$this->username = $user;
 		$this->password = $pass;
-		
+
 		if ($dbName == '')
 			$this->database = $user;
 		else
@@ -161,31 +161,31 @@ class Database {
 		if ($this->inTransaction) {
 			$this->handle->commit();
 		}
-		
+
 		$this->inTransaction = false;
 	}
 
 	/**
-	 * @param String $query The MySQL query to execute
-	 * @param Array $values The values to be populated into the queries '?'
-	 * @return Bool If the execute was successful
+	 * @param string $query The MySQL query to execute
+	 * @param array $values The values to be populated into the queries '?'
+	 * @return bool If the execute was successful
 	 */
-	public function Exec($query, Array $values = array()) {
+	public function Exec($query, array $values = array()) {
 		$this->Connect();
-		
+
 		return $this->handle->prepare($query)->execute($values);
-		
+
 		// Returns the number of affected rows
 		//return $this->handle->exec($query);
 	}
 
 	/**
 	 * Get an array of rows from the database based on the query and the values
-	 * @param String $query The MySQL query to execute
-	 * @param Array $values The values to be populated into the queries '?'
-	 * @param Bool $one If true then a Limit 1 will be applied to the query
-	 * @param Bool $numberedIndexes If true then the response will be an indexed array rather than a hashtable
-	 * @return Array|Mixed The rows that were found that met the criteria
+	 * @param string $query The MySQL query to execute
+	 * @param array $values The values to be populated into the queries '?'
+	 * @param bool $one If true then a Limit 1 will be applied to the query
+	 * @param bool $numberedIndexes If true then the response will be an indexed array rather than a hashtable
+	 * @return array|mixed The rows that were found that met the criteria
 	 */
 	public function GetArray($query, $values=array(), $one=false, $numberedIndexes=false) {
 		$this->Connect();
@@ -194,10 +194,10 @@ class Database {
 		if ($one) {
 			$query .= " LIMIT 1";
 		}
-		
+
 		$obj = $this->handle->prepare($query);
 		$obj->execute($values);
-		
+
 		if ($one) {
 			return $obj->fetch($numberedIndexes ? PDO::FETCH_NUM : PDO::FETCH_ASSOC);
 		} else {
@@ -207,17 +207,17 @@ class Database {
 
 	/**
 	 * Get a single variable (field) from a row in the database
-	 * @param String $what The field to be selected
-	 * @param String $table The table to select from
-	 * @param String $where The WHERE conditions to be applied to the query
-	 * @param Array $values The values to be populated into the queries '?'
-	 * @return Mixed|null The single value in the specified field
+	 * @param string $what The field to be selected
+	 * @param string $table The table to select from
+	 * @param string $where The WHERE conditions to be applied to the query
+	 * @param array $values The values to be populated into the queries '?'
+	 * @return mixed|null The single value in the specified field
 	 */
 	public function GetResult($what, $table, $where, $values=array()) {
 		$this->Connect();
 		$obj = $this->handle->prepare("SELECT {$what} FROM {$table} WHERE $where LIMIT 1");
 		$obj->execute($values);
-		
+
 		return $obj->fetch(PDO::FETCH_NUM)[0];
 	}
 

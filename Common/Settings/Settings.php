@@ -1,5 +1,7 @@
 <?php
 
+namespace Common\Settings;
+
 /**
  * A static class for pulling values from ini files
  * Class Settings
@@ -8,22 +10,22 @@ class Settings {
 
 	/**
 	 * A list of cached settings for pulling multiple values
-	 * @var Array
+	 * @var array
 	 */
 	private static $settings = array();
 
 	/**
 	 * The default settings file name
-	 * @var String
+	 * @var string
 	 */
 	const DEFAULT_SETTINGS_FILE = 'default';
 
 	/**
 	 * Get a particular setting from the desired section
-	 * @param String $section The name of the section to pull from
-	 * @param String $attribute The attribute value that is to be pulled from the section
-	 * @param String $fileName The name of the file to use, otherwise use default file name
-	 * @return Mixed
+	 * @param string $section The name of the section to pull from
+	 * @param string $attribute The attribute value that is to be pulled from the section
+	 * @param string $fileName The name of the file to use, otherwise use default file name
+	 * @return mixed
 	 */
 	public static function GetSetting($section, $attribute, $fileName = self::DEFAULT_SETTINGS_FILE) {
 		// Check to see if the requested setting has been pulled in this instance before, if not then load up the ini file
